@@ -12,8 +12,7 @@ install_dep_backend:
 	cd backend && poetry install
 
 install_dep_frontend:
-	cd frontend
-	npm install
+	cd frontend && npm install
 
 install_dep:
 	pip install poetry
