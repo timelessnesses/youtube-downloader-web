@@ -26,3 +26,10 @@ build_frontend:
 	cd frontend
 	npm run build
 
+beautify_python:
+	$(PYTHON) -m black backend
+	$(PYTHON) -m isort backend
+
+beautify_js:
+	cd frontend
+	npm run lint
