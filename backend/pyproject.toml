@@ -10,7 +10,7 @@ packages = [{include = "youtube_downloader_backend"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 pytube = "^12.1.2"
-fastapi = "^0.88.0"
+fastapi = "^0.89.1"
 uvicorn = "^0.20.0"
 email-validator = "^1.3.0"
 python-dotenv = "^0.21.0"
