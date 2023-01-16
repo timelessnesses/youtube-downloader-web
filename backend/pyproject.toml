@@ -5,7 +5,6 @@ description = "A backbone of youtube downloader"
 authors = ["timelessnesses <mooping3roblox@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "youtube_downloader_backend"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
