@@ -9,14 +9,16 @@ else
 endif
 
 install_dep_backend:
-	cd backend
-	poetry install
+	cd backend && poetry install
 
 install_dep_frontend:
 	cd frontend
 	npm install
 
-install_dep: install_dep_backend install_dep_frontend
+install_dep:
+	pip install poetry
+	make install_dep_backend
+	make install_dep_frontend
 
 run_backend:
 	cd backend
