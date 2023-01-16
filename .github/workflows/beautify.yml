@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Code beautifier (JavaScript, Python, CSS)
 
 on:
   push:
