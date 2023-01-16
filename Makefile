@@ -23,13 +23,16 @@ run_backend:
 	$(PYTHON) -m uvicorn backend.main:app --reload
 
 build_frontend:
-	cd frontend
-	npm run build
+	cd frontend && npm run build
 
 beautify_python:
 	$(PYTHON) -m black backend
 	$(PYTHON) -m isort backend
 
 beautify_js:
-	cd frontend
-	npm run lint
+	cd frontend && npm run format && npm run lint
+
+beautify: beautify_python beautify_js
+
+test_build:
+	$(PYTHON) test_build.py

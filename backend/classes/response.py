@@ -1,9 +1,10 @@
+import datetime
 import enum
 import typing
 
 import pydantic
 import yarl
-import datetime
+
 
 class Status(enum.Enum):
     success = "success"
@@ -38,6 +39,7 @@ class Caption(pydantic.BaseModel):
     name: str
     url: str
 
+
 class Video(pydantic.BaseModel):
     title: str
     age_restricted: bool
@@ -45,9 +47,12 @@ class Video(pydantic.BaseModel):
     length: int
     thumbnail: str
     streams: list[Stream]
+
+
 class CaptionsResponse(BaseResponse):
     captions: list[Caption]
-    
+
+
 class PlaylistStreamsResponse(BaseResponse):
     videos: list[Video]
     name: str
@@ -57,8 +62,8 @@ class PlaylistStreamsResponse(BaseResponse):
     owner: str
     owner_url: str
     views: int
-    
-    
+
+
 class DownloadResponse(BaseResponse):
     at: pydantic.HttpUrl
     size: int

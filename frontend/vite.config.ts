@@ -3,7 +3,7 @@ import type { UserConfig } from 'vite';
 
 const config: UserConfig = {
 	plugins: [sveltekit()],
-	build:{
+	build: {
 		minify: true,
 		commonjsOptions: {
 			esmExternals: true

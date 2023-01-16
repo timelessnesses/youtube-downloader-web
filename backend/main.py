@@ -1,19 +1,20 @@
 import asyncpg
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, BackgroundTasks
-from pytube import Caption, Playlist, Search, YouTube, StreamQuery
+from fastapi import BackgroundTasks, FastAPI, Request
+from pytube import Caption, Playlist, Search, StreamQuery, YouTube
 
 load_dotenv()
+import asyncio
+import io
 import logging
 import os
-import io
-import asyncio
-import zipfile
-
-import yarl
-import pydantic
 import typing
+import zipfile
 from datetime import datetime
+
+import pydantic
+import yarl
+
 from backend.classes import response
 from backend.utils.id_gen import generate_id
 
@@ -25,7 +26,7 @@ app.log = logging.getLogger("YoutubeDownloaderBackend")
 @app.get("/video/streams/{video_id}", response_model=response.StreamsResponse)
 async def youtube(video_id: typing.Union[str, pydantic.HttpUrl]):
     yt = YouTube("https://www.youtube.com/watch?v=" + video_id)
-    
+
     j = {
         "status": "success",
         "streams": [
@@ -109,6 +110,7 @@ async def playlist(playlist_id: str):
     }
     return j
 
+
 @app.post("/video/download/{id}/{itag}")
 async def download(id: str, itag: str, request: Request):
     try:
@@ -123,20 +125,18 @@ async def download(id: str, itag: str, request: Request):
             id,
             j.read(),
             generate_id(1000),
-            datetime.now()
+            datetime.now(),
         )
     except Exception as e:
-        return {
-            "status": "error",
-            "error": "{} {}".format(type(e).__name__, e)
-        }
+        return {"status": "error", "error": "{} {}".format(type(e).__name__, e)}
     return {
         "status": "success",
         "at": str(yarl.URL(request.url).with_path("/video/download/{}".format(id))),
-        "size": stream.filesize_approx
+        "size": stream.filesize_approx,
     }
 
-@app.post("/playlist/download/{id}/{itag}")   
+
+@app.post("/playlist/download/{id}/{itag}")
 async def bulk_download_playlist(id: str, itag: str, request: Request):
     playlist = Playlist("https://www.youtube.com/playlist?list=" + id)
     files = {}
@@ -158,17 +158,17 @@ async def bulk_download_playlist(id: str, itag: str, request: Request):
         id,
         b.getvalue(),
         generate_id(1000),
-        datetime.now()
+        datetime.now(),
     )
+
 
 @app.get("/search/autocomplete/{query}")
 async def autocomplete(query: str):
     return {
         "status": "success",
-        "results": [
-            x for x in Search(query).completion_suggestions
-        ]
+        "results": [x for x in Search(query).completion_suggestions],
     }
+
 
 @app.get("/search/{query}")
 async def search(query: str):
@@ -181,25 +181,28 @@ async def search(query: str):
                 "title": video.title,
                 "length": video.length,
                 "thumbnail": video.thumbnail_url,
-                "id": video.video_id
+                "id": video.video_id,
             }
             for video in videos
-        ]
+        ],
     }
+
 
 @app.get("/database/size")
 async def db_size():
     return {
         "status": "success",
-        "size": await app.db.fetchval("SELECT pg_database_size(cache)")
+        "size": await app.db.fetchval("SELECT pg_database_size(cache)"),
     }
+
 
 @app.get("/database/count")
 async def db_element_count():
     return {
         "status": "success",
-        "videos": await app.db.fetchval("SELECT COUNT(*) FROM cache")
+        "videos": await app.db.fetchval("SELECT COUNT(*) FROM cache"),
     }
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -211,6 +214,7 @@ async def startup_event():
     await app.db.execute(j)
     asyncio.create_task(delete_video_occasionally())
 
+
 async def delete_video_occasionally():
     while True:
         await app.db.execute(
@@ -219,4 +223,3 @@ async def delete_video_occasionally():
             """
         )
         await asyncio.sleep(1200)
-        
