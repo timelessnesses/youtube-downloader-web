@@ -1,0 +1,21 @@
+name: Front end build tester
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Installing Dependencies
+      run: make install_dep
+    
+    - name: Beautify
+      run: make test_build
