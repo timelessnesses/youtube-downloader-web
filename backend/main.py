@@ -14,8 +14,8 @@ import yarl
 import pydantic
 import typing
 from datetime import datetime
-from classes import response
-from utils.id_gen import generate_id
+from backend.classes import response
+from backend.utils.id_gen import generate_id
 
 app = FastAPI(title="Youtube Downloader Backend", docs_url="/")
 app.db: asyncpg.pool.Pool = None
@@ -206,7 +206,7 @@ async def startup_event():
     app.db = await asyncpg.create_pool(
         f"postgresql://{os.getenv('POSTGRESQL_USER')}:{os.getenv('POSTGRESQL_PASSWORD')}@{os.getenv('POSTGRESQL_HOST')}:{os.getenv('POSTGRESQL_PORT')}/{os.getenv('POSTGRESQL_DATABASE')}"
     )
-    with open("sql/init.sql") as fp:
+    with open("backend/sql/init.sql") as fp:
         j = fp.read()
     await app.db.execute(j)
     asyncio.create_task(delete_video_occasionally())
@@ -218,5 +218,5 @@ async def delete_video_occasionally():
             DELETE FROM cache WHERE when_ < NOW() - INTERVAL '7 day'
             """
         )
-        await asyncio.sleep (60)
+        await asyncio.sleep(1200)
         

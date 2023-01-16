@@ -55,7 +55,7 @@ class PlaylistStreamsResponse(BaseResponse):
     description: str
     last_update: typing.Union[str, datetime.datetime]
     owner: str
-    owner_url: typing.Union[str, yarl.URL]
+    owner_url: str
     views: int
     
     
